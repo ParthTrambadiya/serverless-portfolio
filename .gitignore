@@ -1,0 +1,7 @@
+node_modules
+.serverless
+.vscode
+.idea
+.npmignore
+config.dev.json
+stack-output.json

@@ -1,0 +1,34 @@
+.home
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .text-box
+    {
+        z-index: 3;
+        height: 100%;
+
+        hr
+        {
+            background-color: $c-primary;
+            height: 5px;
+            box-shadow: $bs-home-hr;
+        }
+
+        .title
+        {
+            margin: 0 0 0 0;
+            line-height: 42px;
+            padding: 0 0 30px 0;
+            font-size: 40px;
+            font-weight: 900;
+            text-align: center;
+            z-index: 2;
+        }
+        .welcome
+        {
+            max-height: 300px;
+        }
+    }
+}

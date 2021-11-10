@@ -1,0 +1,138 @@
+/*--Fonts--*/
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap');
+
+/*--Variables*/
+@import './includes/variables';
+
+body
+{
+    background-color: $c-black;
+    margin: 0;
+    padding: 0;
+    font-family: $f-primary;
+    overflow: hidden;
+    overflow-y: scroll;
+    height: 100vh;
+
+    &::-webkit-scrollbar 
+    {
+        display: none;
+    }
+
+    &::before
+    {
+        position: fixed;
+        top: -150px;
+        right: -60px;
+        bottom: 0;
+        content: '';
+        width: 400px;
+        height: 600px;
+        border: 2px solid $c-primary;
+        z-index: -1;
+        -webkit-transform: rotate(-30deg);
+        -moz-transform: rotate(-30deg);
+        -ms-transform: rotate(-30deg);
+        -o-transform: rotate(-30deg);
+        transform: rotate(-30deg);
+    }
+
+    &::after
+    {
+        position: fixed;
+        top: 500px;
+        left: -100px;
+        bottom: 0;
+        content: '';
+        width: 400px;
+        height: 400px;
+        border: 2px solid $c-primary;
+        z-index: -1;
+        -webkit-transform: rotate(20deg);
+        -moz-transform: rotate(20deg);
+        -ms-transform: rotate(20deg);
+        -o-transform: rotate(20deg);
+        transform: rotate(20deg);
+    }
+
+    .outer-wrapper
+    {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    p
+    {
+        color: $light-gray;
+        line-height: 1.73;
+        font-size: 15px;
+        text-align: justify;
+    }
+
+    a
+    {
+        text-decoration: none;
+        color: $c-white;
+
+        &:hover
+        {
+            color: $c-white;
+        }
+    }
+
+    .error
+    {
+        color: $c-error;
+    }
+
+    .btn-hover
+    {
+        position:relative;
+        background-color: $c-primary;
+        padding:10px 10px;
+        max-width: 155px;
+        text-align:center;
+        border:2px solid $c-primary;
+        display:block;
+        color:$c-white;
+        margin:20px 0px 20px 0px;
+        transition:0.5s all;
+        border-radius: 2px;
+        width:100%;
+        outline: none;
+
+        &:hover
+        {
+            color:$c-white;
+            text-decoration:none;
+            background-color:transparent;
+            box-shadow: $bs-btn-hover;
+        }
+    }
+    
+}
+
+/*--Import--*/
+
+@import './includes/_preloader';
+@import './includes/tabs';
+@import './includes/left_links';
+@import './includes/person';
+@import './includes/name-animation';
+@import './includes/photo';
+@import './includes/left-section';
+@import './includes/common_in_tabs';
+@import './includes/home';
+@import './includes/home_bg_animation';
+@import './includes/about';
+@import './includes/skills';
+@import './includes/cert-badges';
+@import './includes/pojects';
+@import './includes/readmorepopus';
+@import './includes/contact';
+@import './includes/media-q';
+

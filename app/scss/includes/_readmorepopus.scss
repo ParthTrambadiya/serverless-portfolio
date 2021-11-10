@@ -1,0 +1,124 @@
+/*--read-more-popup--*/
+.popup-box
+{
+	position: fixed;
+	height: 100%;
+	width: 100%;
+	left: 0;
+	top:0;
+	background-color: rgba(0,0,0,0.5);
+	z-index: 500;
+	visibility: hidden;
+	opacity:0;
+    transition: all 0.5s ease-in-out;
+    border-radius: 10px;
+    
+    &.open
+    {
+        visibility: visible;
+	    opacity:1;
+    }
+
+    .popup-content
+    {
+        background-color: $c-white;
+        width: 700px;
+        position: absolute;
+        left: 50%;
+        top:50%;
+        transform: translate(-50%,-50%);
+        border-radius: 10px;
+    }
+
+    .popup-header
+    {
+        padding: 15px 40px 15px 15px;
+        background-color: $c-primary;
+        border-top-left-radius: 2px;
+        border-top-right-radius: 2px;
+        box-shadow: $bs-popup-header;
+
+        h3
+        {
+            margin:0;
+            color: $c-white;
+            font-size: 20px;
+        }
+
+        .popup-close-icon
+        {
+            position: absolute;
+            height: 30px;
+            width: 30px;
+            text-align: center;
+            color: $c-white;
+            font-size: 28px;
+            line-height: 30px;
+            right: 5px;
+            top: 5px;
+            cursor: pointer;
+        }
+    }
+
+    .popup-body
+    {
+        padding: 15px;
+        max-height: 400px;
+        overflow-y: auto;
+
+        &::-webkit-scrollbar
+        {
+            width: 7px;
+            background-color: $c-light-black;
+        }
+
+        &::-webkit-scrollbar-thumb
+        {
+            background-color: $c-scrollbar;
+            border-radius: 20px;
+        }
+
+        p
+        {
+            font-size: 16px;
+            color:$c-black;
+            margin:0 0 15px;
+        }
+
+        img
+        {
+            width: 100%;
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+    }
+
+    .popup-footer
+    {
+        padding: 10px;
+        background-color: $c-primary;
+        text-align: right;
+        border-bottom-left-radius: 2px;
+        border-bottom-right-radius: 2px;
+        box-shadow: $bs-popup-footer;
+
+        .btn
+        {
+            background-color: $c-white;
+            padding:10px 10px;
+            max-width: 150px;
+            border:2px solid $c-white;
+            color: $c-primary;
+            transition:0.5s all;
+            border-radius: 2px;
+
+            &:hover
+            {
+                color: $c-white;
+                text-decoration:none;
+                background-color:transparent;
+            }
+        }
+    }
+}

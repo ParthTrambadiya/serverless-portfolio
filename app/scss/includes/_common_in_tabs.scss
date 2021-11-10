@@ -1,0 +1,53 @@
+/*--Common In Tabs--*/
+.content
+{
+    .title
+    {
+        margin: 0 0 0 0;
+        line-height: 42px;
+        padding: 0 0 30px 0;
+        font-size: 40px;
+        font-weight: 900;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        
+
+        span
+        {
+            filter: $ds-title-text
+        }
+        
+
+        img
+        {
+            max-width: 45px;
+            margin-right: 10px;
+            background-color: $c-title-img-bg;
+            box-shadow: $bs-title-img;
+            padding: 10px;
+            border-radius: 2px;
+        }
+    }
+}
+
+.text-box
+{
+    .subtitle
+    {
+        font-size: 25px;
+        line-height: 27px;
+        font-weight: 700;
+        z-index: 2;
+
+        img
+        {
+            max-width: 30px;
+            margin-right: 10px;
+            background-color: $c-subtitle-img-bg;
+            box-shadow: $bs-subtitle-img;
+            padding: 5px;
+            border-radius: 2px;
+        }
+    }
+}

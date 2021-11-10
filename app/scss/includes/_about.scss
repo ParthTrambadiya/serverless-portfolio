@@ -1,0 +1,124 @@
+/*--About Me--*/
+.about
+{
+    .text-box
+    {
+        .timeline 
+        {
+            width: 100%;
+            height: auto;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+
+            ul
+            {
+                list-style: none;
+
+                li 
+                {
+                    padding: 10px 20px;
+                    background-color: $c-timeline-item-bg;
+                    color: $c-white;
+                    margin-bottom: 20px;
+                    border-radius: 2px;
+                    transition: 0.2s ease-in-out;
+
+                    &:hover
+                    {
+                        box-shadow: $bs-item-hover
+                    }
+
+
+                    &:last-child 
+                    {
+                        margin-bottom: 0;
+                    }
+
+                    .timeline-content 
+                    {
+                        h1
+                        {
+                            font-weight: 500;
+                            font-size: 20px;
+                            line-height: 30px;
+                            margin-bottom: 10px;
+
+                            span
+                            {
+                                color: $c-primary;
+                            }
+                        }
+
+                        h2
+                        {
+                            font-size: 20px;
+                            margin-bottom: 0;
+                        }
+
+                        p 
+                        {
+                            font-size: 16px;
+                            line-height: 30px;
+                            font-weight: 300;
+                        }
+                        .date 
+                        {
+                            font-size: 12px;
+                            font-weight: 300;
+                            letter-spacing: 2px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (min-width: 275px) 
+{
+    .timeline
+    {
+        &::before 
+        {
+            content: "";
+            position: absolute;
+            top: 0;
+            width: 2px;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        ul
+        {
+            li 
+            {
+                position: relative;
+                margin-top: 50px;
+
+                &::before 
+                {
+                    content: "";
+                    background: url('../assets/img/MenuIcons/push-pin.svg');
+                    background-repeat: no-repeat;
+                    position: absolute;
+                    height: 25px;
+                    width: 20px;
+                    border-radius: 2px;
+                    top: -10px;
+                    left: -49px;
+                }
+
+                .timeline-content 
+                {
+                    .date 
+                    {
+                        position: absolute;
+                        top: -30px;
+                        left: 0;
+                    }
+                }
+            }
+        }
+    }
+}

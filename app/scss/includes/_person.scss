@@ -1,0 +1,91 @@
+/*--Person--*/
+.person
+{
+    position: relative;
+    width: 100%;
+    background-color: $c-light-black;
+    height: 600px;
+
+    .person_avatar
+    {
+        position: absolute;
+        height: 100%;
+        left: 0;
+        right: 0;
+        z-index: 2;
+        width: 100%;
+        box-shadow: $bs-person-avatar;
+        background-image: url('../assets/img/Parth_Trambadiya.jpg');
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+    }
+
+    .person_info
+    {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        z-index: 2;
+    }
+
+    .person_name
+    {
+        font-size: 2.5vw;
+        font-weight: 900;
+        color: $c-white;
+        text-align: center;
+        line-height: 1.17;
+        text-transform: uppercase;
+    }
+
+    .person_position
+    {
+        font-size: 18px;
+        font-weight: bold;
+        color: $c-primary;
+        text-align: center;
+        margin-top: 10px;
+        line-height: normal;
+    }
+
+    .person_social_links
+    {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0;
+        margin: 15px 0 20px;
+
+        li
+        {
+            position: relative;
+            list-style: none;
+
+            a
+            {
+                position: relative;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin: 0 10px;
+                text-decoration: none;
+                transition: .5s;
+
+                img
+                {
+                    max-width: 35px;
+                    background: transparent;
+                }
+
+                &:hover
+                {
+                    transform: translateY(-10px);
+                }
+            }
+        }
+    }
+}

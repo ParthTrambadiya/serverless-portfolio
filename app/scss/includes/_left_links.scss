@@ -1,0 +1,117 @@
+/*--Left Links--*/
+.left-list
+{
+    width: 100%;
+    height: 600px;
+    background-color: $c-light-black;
+    overflow: hidden;
+    border-bottom-left-radius: 2px;
+    border-top-left-radius: 2px;
+
+    .ham-section
+    {
+        width: 100%;
+        height: 70px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        background-color: $c-primary;
+
+        .hamburger
+        {
+            display: inline-block;
+            width: 23px;
+            cursor: pointer;
+            height: 2px;
+            z-index: 2;
+            position: relative;
+            background-color: $c-white;
+
+            &::before
+            {
+                width: 23px;
+                position: absolute;
+                top: -9px;
+                z-index: 2;
+                transition: 0.3s all;
+                content: '';
+                background-color: $c-white;
+                height: 2px;
+            }
+
+            &::after
+            {
+                width: 23px;
+                position: absolute;
+                bottom: -9px;
+                z-index: 2;
+                transition: 0.3s all;
+                content: '';
+                background-color: $c-white;
+                height: 2px;
+            }
+        }
+
+        &:hover
+        {
+            .hamburger::before
+            {
+                top: -11px;
+            }
+            .hamburger::after
+            {
+                bottom: -11px;
+            }
+        }
+    }
+
+    .link-section
+    {
+        position: relative;
+        top: -30px;
+
+        .nav-pills
+        {
+            .nav-link
+            {
+                display: block;
+                padding: 15px 0px;
+                width: 75%;
+                margin: 5px auto;
+                text-align: center;
+                border-radius: 2px;
+                position: relative;
+                text-decoration: none;
+                transition: all 0.3s;
+                overflow: hidden;
+
+                img
+                {
+                    width: 25px;
+                    transition: all 0.3s;
+                }
+
+                &.active
+                {
+                    background-color: $c-active-tab-bg;
+                    box-shadow: $bs-menu-img;
+
+                    img
+                    {
+                        transform: scale(1.2);
+                    }
+                }
+            }
+
+            &.show
+            {
+                &>.nav-link
+                {
+                    background-color: $c-active-tab-bg;
+                    box-shadow: $bs-show-nav-link;
+                }
+            }
+        }
+    }
+}

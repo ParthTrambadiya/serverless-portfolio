@@ -1,0 +1,136 @@
+/*--Projects--*/
+.project
+{
+    .project-item
+    {
+        position: relative;
+        height: 250px;
+        background: $c-project-items;
+        display: flex;
+        width: 80%;
+        margin-left: auto;
+        margin-right: auto;
+        border-radius: 2px;
+
+        transition: 0.5s ease-in-out;
+
+        .imgBx
+        {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: $c-project-img-bg;
+            z-index: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            border-radius: 2px;
+            transition: 0.5s ease-in-out;
+
+            img
+            {
+                max-width: 150px;
+                transition: 0.5s ease-in-out;
+            }
+        }
+
+        .content
+        {
+            position: absolute;
+            height: 100%;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            .date
+            {
+                span
+                {
+                    color: $c-primary;
+                }
+            }
+
+            h3
+            {
+                margin-bottom: 5px;
+                font-size: 24px;
+            }
+
+            .read-more
+            {
+                display: none;
+
+                .project-link-text
+                {
+                    color: $c-read-more-link;
+                }
+            }   
+        }
+
+        &:nth-child(odd)
+        {
+            .imgBx
+            {
+                left: 0;
+            }
+
+            .content
+            {
+                right: 0;
+                width: calc(100% - 75px);
+            }
+        }
+
+        &:nth-child(even)
+        {
+            .imgBx
+            {
+                right: 0;
+            }
+            
+            .content
+            {
+                left: 0;
+                width: calc(100% - 75px);
+            }
+        }
+
+        &:hover
+        {
+            box-shadow: $bs-item-hover;
+            &:nth-child(odd)
+            {
+                .imgBx
+                {
+                    left: -75px;
+                }
+            }
+
+            &:nth-child(even)
+            {
+                .imgBx
+                {
+                    right: -75px;
+                }
+            }
+            
+            .imgBx
+            {
+                width: 150px;
+                height: 150px;
+                top: calc(50% - 75px);
+                transition: 0.5s ease-in-out;
+                box-shadow: $bs-item-hover;
+                background-color: $c-primary;
+
+                img
+                {
+                    max-width: 75px;
+                }
+            }
+        }
+    }
+}

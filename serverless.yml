@@ -1,0 +1,242 @@
+service: myportfolio
+frameworkVersion: '2'
+
+plugins:
+  - serverless-iam-roles-per-function
+  - serverless-stack-output
+
+#Services Parameters
+custom:
+  website-bucket-name: ${file(./config.${self:provider.stage}.json):WEBSITE_BUCKET_NAME} #S3 Bucket Name
+  forward-email: ${file(./config.${self:provider.stage}.json):FORWARD_EMAIL} #SNS Topic Email Subscription
+  acm-certificate-arn: ${file(./config.${self:provider.stage}.json):ACM_CERT_ARN} #ACM SSL certificate ARN
+  hosted-zone-id: ${file(./config.${self:provider.stage}.json):HOSTED_ZONE_ID} #Route 53 hosted zone ID
+  output:
+    file: stack-output.json
+
+provider: #Basic configuration with IAM Role for the AWS Lambda
+  name: aws
+  runtime: nodejs12.x
+  stage: ${opt:stage, 'dev'}
+  region: ${opt:region, 'us-east-1'}
+  lambdaHashingVersion: 20201221
+
+#Remove files and folders, those are not needed for lambda package
+package:
+  patterns:
+    - '!node_modules/**'
+    - '!app/**'
+    - '!.gitignore'
+    - '!.npmignore'
+    - '!.vscode'
+    - '!docs'
+    - '!*.json'
+    - '!*.md'
+
+#Lambda functions
+functions:
+  contact:
+    name: ${self:service}-contact-${self:provider.stage}
+    handler: functions/contact.handler
+    description: !Sub 'The lambda function for ${self:service} contact form'
+    environment:
+      CONTACT_TABLE_NAME: !Ref DynamoDBContactTable
+      CONTACT_TOPIC_NAME: !Ref SNSContactReceivedTopic
+    iamRoleStatementsName: ${self:service}-contact-function-iam-role-${self:provider.stage}
+    iamRoleStatements: #IAM Role with DynamoDB write and SNS Topic push permission
+      - Effect: Allow
+        Action:
+          - dynamodb:PutItem
+        Resource:
+          Fn::GetAtt: 
+            - DynamoDBContactTable
+            - Arn
+      - Effect: Allow
+        Action: 
+          - sns:Publish
+        Resource: !Ref SNSContactReceivedTopic
+    events:
+      - http:
+          path: contact
+          method: POST
+          cors: true
+
+#AWS Resources
+resources:
+  Resources:
+    S3SiteBucket: #Bucket for host static website
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:custom.website-bucket-name}
+        WebsiteConfiguration:
+          IndexDocument: index.html
+        PublicAccessBlockConfiguration:
+          BlockPublicAcls: true
+          BlockPublicPolicy: true
+          IgnorePublicAcls: true
+          RestrictPublicBuckets: true
+        CorsConfiguration:
+          CorsRules:
+            - AllowedMethods:
+                - GET
+              AllowedOrigins:
+                - '*'
+              ExposedHeaders:
+                - Date
+              Id: myCORSRuleId1
+              MaxAge: 3600
+
+    DynamoDBContactTable: #DynamoDB table to store contact details
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:service}-contact-table-${self:provider.stage}
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+    
+    OriginAccessIdentity:
+      Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+      Properties:
+        CloudFrontOriginAccessIdentityConfig:
+          Comment: !Sub 'OriginAccessIdentity for ${S3SiteBucket}'
+
+    S3BucketPolicy: #Allow site access from Cloudfront only
+      DependsOn: OriginAccessIdentity
+      Type: AWS::S3::BucketPolicy
+      Properties:
+        Bucket: !Ref S3SiteBucket
+        PolicyDocument:
+          Id: OriginBucketPolicy
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Principal:
+                CanonicalUser: !GetAtt OriginAccessIdentity.S3CanonicalUserId
+              Action: s3:GetObject
+              Resource:
+                !Join
+                  - ''
+                  - - !GetAtt S3SiteBucket.Arn
+                    - '/*'
+    
+    CloudFrontDistribution:
+      Type: AWS::CloudFront::Distribution
+      Properties:
+        DistributionConfig:
+          Origins:
+            - DomainName: ${self:custom.website-bucket-name}.s3.amazonaws.com
+              Id: myS3Origin
+              S3OriginConfig:
+                  OriginAccessIdentity: !Sub 'origin-access-identity/cloudfront/${OriginAccessIdentity}'
+            - DomainName: !Sub '${ApiGatewayRestApi}.execute-api.${AWS::Region}.amazonaws.com'
+              Id: ApiGatewayOrigin
+              CustomOriginConfig:
+                  OriginProtocolPolicy: https-only
+          Enabled: true
+          Comment: !Sub '${self:service} static website distribution'
+          DefaultRootObject: index.html
+          Aliases:
+            - ${self:custom.website-bucket-name}
+          DefaultCacheBehavior:
+            TargetOriginId: myS3Origin
+            ViewerProtocolPolicy: https-only
+            Compress: true
+            DefaultTTL: 3600
+            MaxTTL: 3600
+            AllowedMethods:
+              - GET
+              - HEAD
+              - DELETE
+              - OPTIONS
+              - PATCH
+              - POST
+              - PUT
+            CachedMethods:
+              - GET
+              - HEAD
+              - OPTIONS
+            ForwardedValues:
+              Headers:
+                - Accept
+                - Referer
+                - Authorization
+                - Content-Type
+              QueryString: true
+          CacheBehaviors:
+            - PathPattern: /dev/*
+              TargetOriginId: ApiGatewayOrigin
+              ViewerProtocolPolicy: https-only
+              AllowedMethods:
+                - GET
+                - HEAD
+                - POST
+                - PUT
+                - DELETE
+                - OPTIONS
+                - PATCH
+              ForwardedValues:
+                  QueryString: false
+            - PathPattern: '*'
+              TargetOriginId: myS3Origin
+              ViewerProtocolPolicy: redirect-to-https
+              ForwardedValues:
+                  QueryString: false
+          PriceClass: 'PriceClass_100'
+          ViewerCertificate:
+            AcmCertificateArn: ${self:custom.acm-certificate-arn}
+            MinimumProtocolVersion: TLSv1.2_2018
+            SslSupportMethod: sni-only        
+
+    SNSContactReceivedTopic: #SNS Topic for drop a message when new contact is received
+      Type: AWS::SNS::Topic
+      Properties:
+        DisplayName: 'Contact received email'
+        TopicName: ${self:service}-contact-receive-${self:provider.stage}
+        Subscription:
+          - Endpoint: ${self:custom.forward-email}
+            Protocol: email
+    
+    Route53WebsiteDNSName: #Register Domain with Route53
+      DependsOn: CloudFrontDistribution
+      Type: AWS::Route53::RecordSetGroup
+      Properties:
+        HostedZoneId: ${self:custom.hosted-zone-id}
+        RecordSets:
+          - Name: ${self:custom.website-bucket-name}
+            Type: A
+            AliasTarget:
+              DNSName: !GetAtt 
+                - CloudFrontDistribution
+                - DomainName
+              HostedZoneId: 'Z2FDTNDATAQYW2'
+    
+  #Outputs
+  Outputs:
+    StackName:
+      Description: This is your cloudformation stack name
+      Value: !Ref AWS::StackName
+    StackRegion:
+      Description: This is your cloudformation stack region
+      Value: !Ref AWS::Region
+    StackStage:
+      Description: This is your cloudformation stack stage, 'dev' is default
+      Value: ${self:provider.stage}
+    WebsiteBucket:
+      Description: Website bucket name
+      Value: !Ref S3SiteBucket
+    CloudFrontDistribution:
+      Description: CloudFront distribution url
+      Value: !Join
+        - ''
+        - - 'https://'
+          - !GetAtt CloudFrontDistribution.DomainName
+    CloudFrontDistributionID:
+      Description: CloudFront distribution id
+      Value: !GetAtt CloudFrontDistribution.Id
+
+            
+    

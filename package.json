@@ -1,0 +1,21 @@
+{
+  "name": "myportfolio",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "sass ./app/assets/sass/style.scss ./app/assets/css/style.css --watch",
+    "s3-sync": "aws s3 sync app/ ",
+    "s3-clean": "aws s3 rm --recursive ",
+    "cf-invalidate": "aws cloudfront create-invalidation --distribution-id <cf-id> --path /*"
+  },
+  "author": "Parth Trambadiya",
+  "license": "ISC",
+  "dependencies": {
+    "sass": "^1.32.13",
+    "serverless-iam-roles-per-function": "^3.2.0",
+    "serverless-stack-output": "^0.2.3"
+  },
+  "devDependencies": {}
+}

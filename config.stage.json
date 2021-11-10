@@ -1,0 +1,6 @@
+{
+    "WEBSITE_BUCKET_NAME": "",
+    "FORWARD_EMAIL": "",
+    "ACM_CERT_ARN": "",
+    "HOSTED_ZONE_ID": ""
+}
