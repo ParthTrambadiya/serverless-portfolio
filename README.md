@@ -18,3 +18,5 @@ In this project, we will use Serverless Framework to reserve our resources on AW
 
 ---
 ### For the `Pre-requisites`, `Implementation` and `Clean` visit the below my blog post:
+![This is an image](https://miro.medium.com/max/1400/1*eZo6AJy-82cvtqYAWtAxhw.png)
+https://enlear.academy/deploy-a-serverless-portfolio-website-on-aws-d6bc5c2adeca
